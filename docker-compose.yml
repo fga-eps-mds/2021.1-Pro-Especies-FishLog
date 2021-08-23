@@ -15,3 +15,13 @@ services:
     ports:
       - '4000:4000'
     command: npm run dev
+  db:
+    container_name: mongoDB
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./fishData:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=Fish
+    ports:
+      - 27017:2017
