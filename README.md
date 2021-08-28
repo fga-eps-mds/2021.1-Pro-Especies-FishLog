@@ -1,4 +1,4 @@
-# 2021.1-Pro-Especies-Backend
+# 2021.1-Pro-Especies-FishLog
 
 ## 1. Ambiente de desenvolvimento
 Para fazer uso do ambiente de desenvolvimento é necessário possuir dois pacotes instalados.

@@ -9,14 +9,14 @@ services:
     volumes:
       - ./src:/home/node/app/src
       - ./nodemon.json:/home/node/app/nodemon.json
-    container_name: backend
+    container_name: proespecies-fishlog
     expose:
-      - '4000'
+      - '4001'
     ports:
-      - '4000:4000'
+      - '4001:4001'
     command: npm run dev
   db:
-    container_name: mongoDB
+    container_name: mongoDBFishLog
     image: mongo:latest
     restart: always
     volumes:
