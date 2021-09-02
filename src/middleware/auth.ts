@@ -3,7 +3,10 @@ import * as jwt from 'jsonwebtoken';
 
 export default class AuthService {
   decodeToken = async (token: string) => {
-    const data = await jwt.verify(token, 'secret');
+    const data = await jwt.verify(
+      token,
+      process.env.AUTH_CONFIG_SECRET as string
+    );
     return data;
   };
 
@@ -18,15 +21,19 @@ export default class AuthService {
         message: 'Acesso Restrito',
       });
     } else {
-      jwt.verify(token, 'secret', (error: any) => {
-        if (error) {
-          res.status(401).json({
-            message: 'Token Inválido',
-          });
-        } else {
-          next();
+      jwt.verify(
+        token,
+        process.env.AUTH_CONFIG_SECRET as string,
+        (error: any) => {
+          if (error) {
+            res.status(401).json({
+              message: 'Token Inválido',
+            });
+          } else {
+            next();
+          }
         }
-      });
+      );
     }
   };
 }
