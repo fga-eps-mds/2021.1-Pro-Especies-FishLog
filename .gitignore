@@ -3,7 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 ##DataBase
-fishData/
+fishLog/
 
 ### Node ###
 # Logs

@@ -20,8 +20,8 @@ services:
     image: mongo:latest
     restart: always
     volumes:
-      - ./fishData:/data/db
+      - ./fishLog:/data/db
     environment:
       - MONGO_INITDB_DATABASE=Fish
     ports:
-      - 27017:2017
+      - 27018:27018
