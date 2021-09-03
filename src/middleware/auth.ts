@@ -3,10 +3,7 @@ import * as jwt from 'jsonwebtoken';
 
 export default class AuthService {
   decodeToken = async (token: string) => {
-    const data = await jwt.verify(
-      token,
-      process.env.AUTH_CONFIG_SECRET as string
-    );
+    const data = Buffer.from(token.split('.')[1], 'base64').toString();
     return data;
   };
 

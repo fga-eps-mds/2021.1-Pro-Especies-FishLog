@@ -26,10 +26,15 @@ export default class FishController {
 
   getAllFishLogs = async (req: Request, res: Response) => {
     try {
-      // const token = req.headers.authorization?.split(' ')[1];
-      // const data = await auth.decodeToken(token as string);
-      const response = await FishLog.find({});
-      res.status(200).json(response);
+      const token = req.headers.authorization?.split(' ')[1];
+      const data = JSON.parse(await auth.decodeToken(token as string));
+      if (data.admin) {
+        const responseAdmin = await FishLog.find({});
+        res.status(200).json(responseAdmin);
+      } else {
+        const responseUser = await FishLog.find({ userId: data.id });
+        res.status(200).json(responseUser);
+      }
     } catch (error) {
       console.log(error);
       res.status(500).json({
