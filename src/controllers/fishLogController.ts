@@ -46,22 +46,20 @@ export default class FishController {
   };
 
   getOneFishLog = async (req: Request, res: Response) => {
-    try{
+    try {
       const token = req.headers.authorization?.split(' ')[1];
       const data = JSON.parse(await auth.decodeToken(token as string));
       const logId = req.params.id;
       const fishLog = await FishLog.findById(logId);
 
-      //confere se é admin ou se é o autor
-      if (data.admin || fishLog?.userId == data.id) {
-          res.status(200).json(fishLog);
-      } else{
+      if (data.admin || fishLog?.userId === Number(data.id)) {
+        res.status(200).json(fishLog);
+      } else {
         res.status(401).json({
           message: 'Você não tem permissão para ver esse registro',
         });
       }
-
-    } catch (error){
+    } catch (error) {
       console.log(error);
       res.status(500).json({
         message: 'Falha ao processar requisição',
