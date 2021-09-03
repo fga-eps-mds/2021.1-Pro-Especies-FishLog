@@ -52,7 +52,7 @@ export default class FishController {
       const logId = req.params.id;
       const fishLog = await FishLog.findById(logId);
 
-      if (data.admin || fishLog?.userId === Number(data.id)) {
+      if (data.admin || String(fishLog?.userId) === data.id) {
         res.status(200).json(fishLog);
       } else {
         res.status(401).json({
