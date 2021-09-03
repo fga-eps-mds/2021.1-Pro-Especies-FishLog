@@ -16,4 +16,8 @@ fishLogRoutes.get('/', auth.authorize, (req: Request, res: Response) => {
   fishLogController.getAllFishLogs(req, res);
 });
 
+fishLogRoutes.get('/:id', auth.authorize, (req: Request, res: Response) => {
+  fishLogController.getOneFishLog(req, res);
+});
+
 export default fishLogRoutes;
