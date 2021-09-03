@@ -12,4 +12,8 @@ fishLogRoutes.post('/', auth.authorize, (req: Request, res: Response) => {
   fishLogController.createFishLog(req, res);
 });
 
+fishLogRoutes.get('/', auth.authorize, (req: Request, res: Response) => {
+  fishLogController.getAllFishLogs(req, res);
+});
+
 export default fishLogRoutes;
