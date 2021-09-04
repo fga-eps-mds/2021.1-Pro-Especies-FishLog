@@ -52,16 +52,108 @@ export default class FishController {
       const logId = req.params.id;
       const fishLog = await FishLog.findById(logId);
 
+      if (!fishLog) {
+        return res.status(404).json({
+          message: 'Relatório não encontrado',
+        });
+      }
+
       if (data.admin || String(fishLog?.userId) === data.id) {
-        res.status(200).json(fishLog);
+        return res.status(200).json(fishLog);
+      }
+      return res.status(401).json({
+        message: 'Você não tem permissão para ver esse registro',
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
+        message: 'Falha ao processar requisição',
+      });
+    }
+  };
+
+  updateFishLog = async (req: Request, res: Response) => {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      const data = JSON.parse(await auth.decodeToken(token as string));
+      const logId = req.params.id;
+      const fishLog = await FishLog.findById(logId);
+
+      const newFishLog = req.body;
+
+      if (!fishLog) {
+        return res.status(404).json({
+          message: 'Relatório não encontrado',
+        });
+      }
+
+      if (
+        data.admin ||
+        (!fishLog.reviewed && String(fishLog?.userId) === data.id)
+      ) {
+        try {
+          await fishLog.updateOne(newFishLog);
+
+          await fishLog.updateOne({ $push: { updatedBy: data.id } });
+
+          return res.status(200).json({
+            message: 'Registo atualizado com sucesso!',
+          });
+        } catch (error) {
+          console.log(error);
+          return res.status(500).json({
+            message: 'Falha ao atualizar o registro. Tente novamente',
+          });
+        }
       } else {
-        res.status(401).json({
+        return res.status(401).json({
           message: 'Você não tem permissão para ver esse registro',
         });
       }
     } catch (error) {
       console.log(error);
-      res.status(500).json({
+      return res.status(500).json({
+        message: 'Falha ao processar requisição',
+      });
+    }
+  };
+
+  deleteFishLog = async (req: Request, res: Response) => {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      const data = JSON.parse(await auth.decodeToken(token as string));
+      const logId = req.params.id;
+      const fishLog = await FishLog.findById(logId);
+
+      if (!fishLog) {
+        return res.status(404).json({
+          message: 'Relatório não encontrado',
+        });
+      }
+
+      if (
+        data.admin ||
+        (!fishLog.reviewed && String(fishLog?.userId) === data.id)
+      ) {
+        try {
+          await FishLog.findByIdAndDelete(logId);
+          return res.status(200).json({
+            message: 'Registo deletado com sucesso!',
+          });
+        } catch (error) {
+          console.log(error);
+          return res.status(500).json({
+            message: 'Falha ao deletar o registro. Tente novamente',
+          });
+        }
+      } else {
+        return res.status(401).json({
+          message: 'Você não tem permissão para deletar esse registro',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({
         message: 'Falha ao processar requisição',
       });
     }
