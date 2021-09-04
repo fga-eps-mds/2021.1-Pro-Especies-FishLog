@@ -20,4 +20,12 @@ fishLogRoutes.get('/:id', auth.authorize, (req: Request, res: Response) => {
   fishLogController.getOneFishLog(req, res);
 });
 
+fishLogRoutes.patch('/:id', auth.authorize, (req: Request, res: Response) => {
+  fishLogController.updateFishLog(req, res);
+});
+
+fishLogRoutes.delete('/:id', auth.authorize, (req: Request, res: Response) => {
+  fishLogController.deleteFishLog(req, res);
+});
+
 export default fishLogRoutes;
