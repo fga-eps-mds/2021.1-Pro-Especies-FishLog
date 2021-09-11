@@ -1,5 +1,5 @@
 # 2021.1-Pro-Especies-FishLog
-
+[![codecov](https://codecov.io/gh/fga-eps-mds/2021.1-Pro-Especies-FishLog/branch/main/graph/badge.svg?token=WJVY5IT9WJ)](https://codecov.io/gh/fga-eps-mds/2021.1-Pro-Especies-FishLog)
 ## 1. Ambiente de desenvolvimento
 Para fazer uso do ambiente de desenvolvimento é necessário possuir dois pacotes instalados.
 * docker
