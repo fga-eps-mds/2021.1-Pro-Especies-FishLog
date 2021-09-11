@@ -9,12 +9,6 @@ const fishMock = {
   specie: 'aa',
   reviewed: false,
 };
-// const newFishMock = {
-//   _id: '3472417428',
-//   userId: '61323c37dc4d0100225782f8',
-//   specie: 'bb',
-//   updatedBy: '61323c37dc4d0100225782f8',
-// };
 const mockResponse = () => {
   const response = {} as Response;
   response.status = jest.fn().mockReturnValue(response);
