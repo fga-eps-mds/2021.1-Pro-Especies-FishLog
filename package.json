@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "start": "NODE_PATH=./build node build/server.js",
     "build": "tsc -p .",
     "dev": "nodemon src/server.ts",
