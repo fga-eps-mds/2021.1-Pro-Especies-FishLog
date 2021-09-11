@@ -18,7 +18,7 @@ export default class FishController {
       return res.status(200).json({ fish });
     } catch (error) {
       console.log(error);
-      return res.status(400).json({
+      return res.status(500).json({
         message: 'Falha no sistema de criação de registro, tente novamente!',
       });
     }
