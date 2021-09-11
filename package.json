@@ -2,12 +2,12 @@
   "name": "2021.1-pro-especies-fishlog",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "NODE_PATH=./build node build/index.js",
+    "start": "NODE_PATH=./build node build/server.js",
     "build": "tsc -p .",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon src/server.ts",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "repository": {

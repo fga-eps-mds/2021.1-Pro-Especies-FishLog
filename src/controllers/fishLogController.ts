@@ -17,7 +17,6 @@ export default class FishController {
 
       return res.status(200).json({ fish });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: 'Falha no sistema de criação de registro, tente novamente!',
       });
@@ -61,7 +60,6 @@ export default class FishController {
         message: 'Você não tem permissão para ver esse registro',
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: 'Falha ao processar requisição',
       });
@@ -96,7 +94,6 @@ export default class FishController {
             message: 'Registo atualizado com sucesso!',
           });
         } catch (error) {
-          console.log(error);
           return res.status(500).json({
             message: 'Falha ao atualizar o registro. Tente novamente',
           });
@@ -107,7 +104,6 @@ export default class FishController {
         });
       }
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: 'Falha ao processar requisição',
       });
@@ -137,7 +133,6 @@ export default class FishController {
             message: 'Registo deletado com sucesso!',
           });
         } catch (error) {
-          console.log(error);
           return res.status(500).json({
             message: 'Falha ao deletar o registro. Tente novamente',
           });
@@ -148,7 +143,6 @@ export default class FishController {
         });
       }
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         message: 'Falha ao processar requisição',
       });

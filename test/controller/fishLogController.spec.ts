@@ -9,12 +9,12 @@ const fishMock = {
   specie: 'aa',
   reviewed: false,
 };
-const newFishMock = {
-  _id: '3472417428',
-  userId: '61323c37dc4d0100225782f8',
-  specie: 'bb',
-  updatedBy: '61323c37dc4d0100225782f8',
-};
+// const newFishMock = {
+//   _id: '3472417428',
+//   userId: '61323c37dc4d0100225782f8',
+//   specie: 'bb',
+//   updatedBy: '61323c37dc4d0100225782f8',
+// };
 const mockResponse = () => {
   const response = {} as Response;
   response.status = jest.fn().mockReturnValue(response);
@@ -53,22 +53,18 @@ describe('Test Create FishLog function', () => {
     expect(res.status).toHaveBeenCalledWith(400);
   });
 
-  // it('should get a statusCode 500', async () => {
-  //   const mockRequest = {} as Request;
-  //   mockRequest.body = {
-  //     userId: '1',
-  //     specie: 'aa',
-  //   };
+  it('should get a statusCode 500', async () => {
+    const mockRequest = {} as Request;
 
-  //   const response = mockResponse();
-  //   jest
-  //     .spyOn(FishLog, 'create')
-  //     .mockImplementationOnce(() =>
-  //       Promise.reject(Error('Falha no sistema de criação de registro'))
-  //     );
-  //   const res = await fishLogController.createFishLog(mockRequest, response);
-  //   expect(res.status).toHaveBeenCalledWith(500);
-  // });
+    const response = mockResponse();
+    jest
+      .spyOn(FishLog, 'create')
+      .mockImplementationOnce(() =>
+        Promise.reject(Error('Falha no sistema de criação de registro'))
+      );
+    const res = await fishLogController.createFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
 });
 
 describe('Test Get All FishLogs function', () => {
@@ -96,7 +92,7 @@ describe('Test Get All FishLogs function', () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it('should get a statusCode 500', async () => {
+  it('should get a statusCode 500 if request failed', async () => {
     const mockRequest = {} as Request;
     mockRequest.headers = {
       authorization:
@@ -143,6 +139,92 @@ describe('Test Get One FishLog function', () => {
     const res = await fishLogController.getOneFishLog(mockRequest, response);
     expect(res.status).toHaveBeenCalledWith(200);
   });
+
+  it('should get a statusCode 404 if fishlog not found', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYzM3ZGM0ZDAxMDAyMjU3ODJmOCIsImVtYWlsIjoibmF0YW5lZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRpQldyTk1yd3RKZEliOG5ibGZJZkVlY0cucjY0dFR3SkltRFhkQW9HYkc3b3M2UzUvUzNNNiIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjMwNjk4MTAzLCJleHAiOjE2MzA3ODQ1MDN9.B4nEuDFmC4TRMY57nIWyg46loniEAzjn7PJAapwAuXc',
+    };
+    mockRequest.params = {
+      id: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(undefined);
+    const res = await fishLogController.getOneFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  it('should get a statusCode 401 if user is not the author', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzI2NGJmMzZmMzAzMDAyMjVlYWE5YiIsImVtYWlsIjoibmF0YW5lZWRkQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGlaT0gwUnhaSUxHN0RlbnFXRktCRGVra0szUHBaTnU0ZXNwajl4UjFHMU1FaWh4T0h5b3l1IiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE2MzA2OTgxOTgsImV4cCI6MTYzMDc4NDU5OH0._lbiE0RZJn1N3mgQuiVjsGza8FC1grjRrVDjaxCCz6w',
+    };
+    mockRequest.params = {
+      id: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    const res = await fishLogController.getOneFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(401);
+  });
+
+  it('should get a statusCode 500 if request failed', async () => {
+    const mockRequest = {} as Request;
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    const res = await fishLogController.getOneFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
+});
+
+describe('Test update FishLog function', () => {
+  it('should get a statusCode 404 if fishlog not found', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      userId: '61323c37dc4d0100225782f8',
+      specie: 'bb',
+    };
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYzM3ZGM0ZDAxMDAyMjU3ODJmOCIsImVtYWlsIjoibmF0YW5lZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRpQldyTk1yd3RKZEliOG5ibGZJZkVlY0cucjY0dFR3SkltRFhkQW9HYkc3b3M2UzUvUzNNNiIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjMwNjk4MTAzLCJleHAiOjE2MzA3ODQ1MDN9.B4nEuDFmC4TRMY57nIWyg46loniEAzjn7PJAapwAuXc',
+    };
+    mockRequest.params = {
+      id: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(undefined);
+    const res = await fishLogController.updateFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  it('should get a statusCode 401 if user is not the author', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.body = {
+      userId: '61323c37dc4d0100225782f8',
+      specie: 'bb',
+    };
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzI2NGJmMzZmMzAzMDAyMjVlYWE5YiIsImVtYWlsIjoibmF0YW5lZWRkQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGlaT0gwUnhaSUxHN0RlbnFXRktCRGVra0szUHBaTnU0ZXNwajl4UjFHMU1FaWh4T0h5b3l1IiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE2MzA2OTgxOTgsImV4cCI6MTYzMDc4NDU5OH0._lbiE0RZJn1N3mgQuiVjsGza8FC1grjRrVDjaxCCz6w',
+    };
+    mockRequest.params = {
+      id: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    const res = await fishLogController.updateFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(401);
+  });
+
+  it('should get a statusCode 500 if request failed', async () => {
+    const mockRequest = {} as Request;
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    const res = await fishLogController.updateFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
 });
 
 describe('Test delete FishLog function', () => {
@@ -161,54 +243,45 @@ describe('Test delete FishLog function', () => {
     const res = await fishLogController.deleteFishLog(mockRequest, response);
     expect(res.status).toHaveBeenCalledWith(200);
   });
+
+  it('should get a statusCode 404 if fishlog not found', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYmJhZGM0ZDAxMDAyMjU3ODJmMCIsImVtYWlsIjoibmF0YW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWDZtZ0cwZ0JhQzAwMHhHV1pIbVJrdTdVZkpZbHNxMS9La1hRMDBtdVdtLzdhdlhoanZ4UjIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMwNjk4Mjg0LCJleHAiOjE2MzA3ODQ2ODR9.uDsTpUWS-R47UquW044GjSdDXR1bgSw5GU7WGM6IIuI',
+    };
+    mockRequest.params = {
+      id: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(undefined);
+    FishLog.findByIdAndDelete = jest.fn().mockResolvedValueOnce({});
+    const res = await fishLogController.deleteFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(404);
+  });
+
+  it('should get a statusCode 401 if user is not the author', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzI2NGJmMzZmMzAzMDAyMjVlYWE5YiIsImVtYWlsIjoibmF0YW5lZWRkQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGlaT0gwUnhaSUxHN0RlbnFXRktCRGVra0szUHBaTnU0ZXNwajl4UjFHMU1FaWh4T0h5b3l1IiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE2MzA2OTgxOTgsImV4cCI6MTYzMDc4NDU5OH0._lbiE0RZJn1N3mgQuiVjsGza8FC1grjRrVDjaxCCz6w',
+    };
+    mockRequest.params = {
+      id: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    FishLog.findByIdAndDelete = jest.fn().mockResolvedValueOnce({});
+    const res = await fishLogController.deleteFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(401);
+  });
+
+  it('should get a statusCode 500 if request failed', async () => {
+    const mockRequest = {} as Request;
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    FishLog.findByIdAndDelete = jest.fn().mockResolvedValueOnce({});
+    const res = await fishLogController.deleteFishLog(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(500);
+  });
 });
-
-// describe('Test Login function', () => {
-//     it('should get a statusCode 200', async () => {
-//       const mockRequest = {} as Request;
-//       mockRequest.body = {
-//         emailPhone: 'batista@sugardaddy.com',
-//         password: '12345678',
-//       };
-
-//       const response = mockResponse();
-//       User.findOne = jest.fn().mockImplementationOnce(() => ({
-//         select: jest.fn().mockResolvedValueOnce(userMock),
-//       }));
-//       jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => true);
-//       jest
-//         .spyOn(AuthUser.prototype, 'generateToken')
-//         .mockImplementationOnce(() => 'mockToken');
-//       const res = await userController.login(mockRequest, response);
-//       expect(res.status).toHaveBeenCalledWith(200);
-//     });
-
-//     it('should get a statusCode 401', async () => {
-//       const mockRequest = {} as Request;
-//       mockRequest.body = {
-//         emailPhone: 'batista@sugardaddy.com',
-//         password: '12345678',
-//       };
-
-//       const response = mockResponse();
-//       User.findOne = jest.fn().mockImplementationOnce(() => ({
-//         select: jest.fn().mockResolvedValueOnce(userMock),
-//       }));
-//       jest.spyOn(bcrypt, 'compare').mockImplementationOnce(() => false);
-//       const res = await userController.login(mockRequest, response);
-//       expect(res.status).toHaveBeenCalledWith(401);
-//     });
-
-//     it('should get a statusCode 500', async () => {
-//       const mockRequest = {} as Request;
-//       mockRequest.body = {
-//         emailPhone: 'batista@sugardaddy.com',
-//         password: '12345678',
-//       };
-
-//       const response = mockResponse();
-//       User.findOne = jest.fn();
-//       const res = await userController.login(mockRequest, response);
-//       expect(res.status).toHaveBeenCalledWith(500);
-//     });
-//   });
