@@ -23,7 +23,8 @@ jobs:
     - name: Run the tests
       run: npm test -- --coverage
     
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
-      with:
-          token: ${{ secrets.CODECOV_TOKEN_FISHLOG }}
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@v1.4
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_API }}
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
