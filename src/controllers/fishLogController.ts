@@ -27,13 +27,76 @@ export default class FishController {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       const data = JSON.parse(await auth.decodeToken(token as string));
+      const { status } = req.query;
 
-      if (data.admin) {
-        const responseAdmin = await FishLog.find({});
-        return res.status(200).json(responseAdmin);
+      if (status === 'all') {
+        if (data.admin) {
+          const responseAdmin = await FishLog.find({});
+          return res.status(200).json(responseAdmin);
+        }
+        const responseUser = await FishLog.find({ userId: data.id });
+        return res.status(200).json(responseUser);
       }
-      const responseUser = await FishLog.find({ userId: data.id });
-      return res.status(200).json(responseUser);
+      if (status === 'reviewed') {
+        if (data.admin) {
+          const responseAdmin = await FishLog.find({ reviewed: true });
+          return res.status(200).json(responseAdmin);
+        }
+        const responseUser = await FishLog.find({
+          userId: data.id,
+          reviewed: true,
+        });
+        return res.status(200).json(responseUser);
+      }
+      if (status === 'toBeReviewed') {
+        if (data.admin) {
+          const responseAdmin = await FishLog.find({ reviewed: false });
+          return res.status(200).json(responseAdmin);
+        }
+        const responseUser = await FishLog.find({
+          userId: data.id,
+          reviewed: false,
+        });
+        return res.status(200).json(responseUser);
+      }
+      return res
+        .status(404)
+        .json({ message: 'Parâmetro de busca não existente!' });
+
+      // if (data.admin) {
+      //   const responseAdmin = await FishLog.find({});
+      //   if (status === 'all') {
+      //     return res.status(200).json(responseAdmin);
+      //   }
+      //   if (status === 'reviewed') {
+      //     const reviewedAdmin = [] as Object[];
+      //     responseAdmin.forEach((element) => {
+      //       if (element.reviewed === true) {
+      //         reviewedAdmin.push(element);
+      //       }
+      //     });
+      //     return res.status(200).json(reviewedAdmin);
+      //   }
+      //   if (status === 'toBeReviewed') {
+      //     const toBeReviewedAdmin = [] as Object[];
+      //     responseAdmin.forEach((element) => {
+      //       if (element.reviewed === false) {
+      //         toBeReviewedAdmin.push(element);
+      //       }
+      //     });
+      //     return res.status(200).json(toBeReviewedAdmin);
+      //   }
+      //   if (!status) {
+      //     return res
+      //       .status(404)
+      //       .json({ message: 'Parâmetro de de status não especificado!' });
+      //   }
+      //   return res
+      //     .status(404)
+      //     .json({ message: 'Parâmetro de status não existente' });
+      // }
+      // const responseUser = await FishLog.find({ userId: data.id });
+      // return res.status(200).json(responseUser);
     } catch (error) {
       return res.status(500).json({
         message: 'Falha ao processar requisição',
