@@ -1,8 +1,6 @@
-name: Bump version
+name: Generate Release
 on:
-  pull_request:
-    tags:
-      - 'v*.*'
+  push:
     branches:
       - main
 jobs:
@@ -10,26 +8,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get SonarCloud metrics
+
+      - name: Set filename
         id: report
         run: |
-            echo "::set-output name=date::$(date +'%d-%m-%Y-%H')"
+            echo "::set-output name=report_file_name::fga-eps-mds-${{ github.event.repository.name }}-$(TZ='America/Sao_Paulo' date +'%m-%d-%Y-%H-%M')"
 
-            echo "::set-output name=report_file_name::$('fga-eps-mds-${{ github.event.repository.name }}-${{ steps.report.outputs.date }}')"
+      - name: Get SonarCloud metrics
+        run: |
             wget $SONAR_URL -O ${{ steps.report.outputs.report_file_name }}.json
         env:
             SONAR_URL: ${{ secrets.SONAR_URL }}
-      - name: Pushes test file
+
+      - name: Pushes sonar file
         uses: dmnemec/copy_file_to_another_repo_action@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.GIT_TOKEN }}
         with:
-          source_file: ${{ steps.report.output.report_file_name }}.json
+          source_file: ${{ steps.report.outputs.report_file_name }}.json
           destination_repo: 'fga-eps-mds/2021.1-Pro-Especies-Docs'
           destination_folder: 'analytics-raw-data'
           user_email: ${{ secrets.GIT_EMAIL}}
@@ -37,10 +39,10 @@ jobs:
           commit_message: Upload a new metrics from ${{ github.event.repository.name }}
 
       - name: Create a GitHub release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: '1.0'
-          release_name: Release 1.0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
+          artifacts: ${{ steps.report.outputs.report_file_name }}.json
