@@ -28,4 +28,12 @@ fishLogRoutes.delete('/:id', auth.authorize, (req: Request, res: Response) => {
   fishLogController.deleteFishLog(req, res);
 });
 
+fishLogRoutes.get(
+  '/export/:id',
+  auth.authorize,
+  (req: Request, res: Response) => {
+    fishLogController.generateCSV(req, res);
+  }
+);
+
 export default fishLogRoutes;

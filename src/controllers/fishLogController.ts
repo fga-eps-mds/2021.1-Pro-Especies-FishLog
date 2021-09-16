@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import FishLog from '../models/fishLog';
 import AuthService from '../middleware/auth';
 
+const json2csv = require('json2csv').parse;
+
 const auth = new AuthService();
 
 export default class FishController {
@@ -146,6 +148,30 @@ export default class FishController {
       return res.status(500).json({
         message: 'Falha ao processar requisição',
       });
+    }
+  };
+
+  generateCSV = async (req: Request, res: Response) => {
+    try {
+      const token = req.headers.authorization?.split(' ')[1];
+      const data = JSON.parse(await auth.decodeToken(token as string));
+      const logId = req.params.id;
+
+      if (data.admin) {
+        const fishLog = await FishLog.findById(logId);
+        const csvFile = json2csv({
+          fishType: fishLog?.fishType,
+          specie: fishLog?.specie,
+          lenght: fishLog?.lenght,
+        });
+
+        res.attachment('Registro.csv');
+        return res.status(200).send(csvFile);
+      }
+      return res.status(401).json({ message: 'Autorização negada!' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Falha na requisição' });
     }
   };
 }
