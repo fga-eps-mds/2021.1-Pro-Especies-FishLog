@@ -1,0 +1,48 @@
+name: Generate Release
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v5.6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set filename
+        id: report
+        run: |
+            echo "::set-output name=report_file_name::fga-eps-mds-${{ github.event.repository.name }}-$(TZ='America/Sao_Paulo' date +'%m-%d-%Y-%H-%M')"
+
+      - name: Get SonarCloud metrics
+        run: |
+            wget $SONAR_URL -O ${{ steps.report.outputs.report_file_name }}.json
+        env:
+            SONAR_URL: ${{ secrets.SONAR_URL }}
+
+      - name: Pushes sonar file
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GIT_TOKEN }}
+        with:
+          source_file: ${{ steps.report.outputs.report_file_name }}.json
+          destination_repo: 'fga-eps-mds/2021.1-Pro-Especies-Docs'
+          destination_folder: 'analytics-raw-data'
+          user_email: ${{ secrets.GIT_EMAIL}}
+          user_name: ${{ secrets.GIT_USER }}
+          commit_message: Upload a new metrics from ${{ github.event.repository.name }}
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+          artifacts: ${{ steps.report.outputs.report_file_name }}.json
