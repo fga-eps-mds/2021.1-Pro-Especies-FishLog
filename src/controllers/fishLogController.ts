@@ -62,41 +62,6 @@ export default class FishController {
       return res
         .status(404)
         .json({ message: 'Parâmetro de busca não existente!' });
-
-      // if (data.admin) {
-      //   const responseAdmin = await FishLog.find({});
-      //   if (status === 'all') {
-      //     return res.status(200).json(responseAdmin);
-      //   }
-      //   if (status === 'reviewed') {
-      //     const reviewedAdmin = [] as Object[];
-      //     responseAdmin.forEach((element) => {
-      //       if (element.reviewed === true) {
-      //         reviewedAdmin.push(element);
-      //       }
-      //     });
-      //     return res.status(200).json(reviewedAdmin);
-      //   }
-      //   if (status === 'toBeReviewed') {
-      //     const toBeReviewedAdmin = [] as Object[];
-      //     responseAdmin.forEach((element) => {
-      //       if (element.reviewed === false) {
-      //         toBeReviewedAdmin.push(element);
-      //       }
-      //     });
-      //     return res.status(200).json(toBeReviewedAdmin);
-      //   }
-      //   if (!status) {
-      //     return res
-      //       .status(404)
-      //       .json({ message: 'Parâmetro de de status não especificado!' });
-      //   }
-      //   return res
-      //     .status(404)
-      //     .json({ message: 'Parâmetro de status não existente' });
-      // }
-      // const responseUser = await FishLog.find({ userId: data.id });
-      // return res.status(200).json(responseUser);
     } catch (error) {
       return res.status(500).json({
         message: 'Falha ao processar requisição',
