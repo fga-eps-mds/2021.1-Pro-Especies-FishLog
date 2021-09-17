@@ -8,6 +8,10 @@ const fishLogRoutes = Router();
 
 const fishLogController = new FishController();
 
+fishLogRoutes.get('/export/', auth.authorize, (req: Request, res: Response) => {
+  fishLogController.generateCSV(req, res);
+});
+
 fishLogRoutes.post('/', auth.authorize, (req: Request, res: Response) => {
   fishLogController.createFishLog(req, res);
 });
@@ -27,13 +31,5 @@ fishLogRoutes.patch('/:id', auth.authorize, (req: Request, res: Response) => {
 fishLogRoutes.delete('/:id', auth.authorize, (req: Request, res: Response) => {
   fishLogController.deleteFishLog(req, res);
 });
-
-fishLogRoutes.get(
-  '/export/:id',
-  auth.authorize,
-  (req: Request, res: Response) => {
-    fishLogController.generateCSV(req, res);
-  }
-);
 
 export default fishLogRoutes;

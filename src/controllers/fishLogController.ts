@@ -155,18 +155,20 @@ export default class FishController {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       const data = JSON.parse(await auth.decodeToken(token as string));
-      const logId = req.params.id;
+      const fishLogIds = req.body;
+      console.log(fishLogIds);
 
       if (data.admin) {
-        const fishLog = await FishLog.findById(logId);
-        const csvFile = json2csv({
-          fishType: fishLog?.fishType,
-          specie: fishLog?.specie,
-          lenght: fishLog?.lenght,
-        });
-
-        res.attachment('Registro.csv');
-        return res.status(200).send(csvFile);
+        // const fishLogArray = [] as Object[];
+        // fishLogIds.forEach(async (element: String) => {
+        //   const fishLog = await FishLog.findById(element);
+        //   fishLogArray.push(fishLog);
+        // });
+        // const csvFile = json2csv({
+        //   fishType: fishLogTypes,
+        // });
+        // res.attachment('Registro.csv');
+        // return res.status(200).send(csvFile);
       }
       return res.status(401).json({ message: 'Autorização negada!' });
     } catch (error) {
