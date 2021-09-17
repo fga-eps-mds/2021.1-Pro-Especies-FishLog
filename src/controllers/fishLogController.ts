@@ -29,39 +29,30 @@ export default class FishController {
       const data = JSON.parse(await auth.decodeToken(token as string));
       const { status } = req.query;
 
-      if (status === 'all') {
-        if (data.admin) {
-          const responseAdmin = await FishLog.find({});
-          return res.status(200).json(responseAdmin);
-        }
-        const responseUser = await FishLog.find({ userId: data.id });
-        return res.status(200).json(responseUser);
+      interface IParams {
+        reviewed?: Boolean;
+        userId?: Number;
       }
+
+      let params = {} as IParams;
+
       if (status === 'reviewed') {
-        if (data.admin) {
-          const responseAdmin = await FishLog.find({ reviewed: true });
-          return res.status(200).json(responseAdmin);
-        }
-        const responseUser = await FishLog.find({
-          userId: data.id,
+        params = {
           reviewed: true,
-        });
-        return res.status(200).json(responseUser);
-      }
-      if (status === 'toBeReviewed') {
-        if (data.admin) {
-          const responseAdmin = await FishLog.find({ reviewed: false });
-          return res.status(200).json(responseAdmin);
-        }
-        const responseUser = await FishLog.find({
-          userId: data.id,
+        };
+      } else if (status === 'toBeReviewed') {
+        params = {
           reviewed: false,
-        });
-        return res.status(200).json(responseUser);
+        };
       }
-      return res
-        .status(404)
-        .json({ message: 'Parâmetro de busca não existente!' });
+
+      if (data.admin) {
+        const responseAdmin = await FishLog.find(params);
+        return res.status(200).json(responseAdmin);
+      }
+      params.userId = data.id;
+      const responseUser = await FishLog.find(params);
+      return res.status(200).json(responseUser);
     } catch (error) {
       return res.status(500).json({
         message: 'Falha ao processar requisição',
