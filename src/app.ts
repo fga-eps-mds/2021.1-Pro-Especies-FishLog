@@ -5,6 +5,7 @@ import router from './routes/router';
 require('dotenv').config();
 
 const app = express();
+app.disable('x-powered-by');
 
 databaseConnect();
 
