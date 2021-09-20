@@ -8,7 +8,7 @@ const fishLogRoutes = Router();
 
 const fishLogController = new FishController();
 
-fishLogRoutes.get('/export/', auth.authorize, (req: Request, res: Response) => {
+fishLogRoutes.get('/export/', (req: Request, res: Response) => {
   fishLogController.generateCSV(req, res);
 });
 
