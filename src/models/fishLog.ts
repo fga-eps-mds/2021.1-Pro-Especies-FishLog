@@ -5,10 +5,10 @@ export interface IFishLog extends Document {
   name: string;
   largeGroup: string;
   group: string;
-  specie: string;
+  species: string;
   coordenates: [number, number][];
   photo: string;
-  lenght: number;
+  length: number;
   weight: number;
   reviewed: boolean;
   reviewedBy: number;
@@ -38,7 +38,7 @@ const fishLogSchema = new Schema<IFishLog>(
       type: String,
       required: false,
     },
-    specie: {
+    species: {
       type: String,
       required: false,
     },
@@ -50,7 +50,7 @@ const fishLogSchema = new Schema<IFishLog>(
       type: String,
       required: false,
     },
-    lenght: {
+    length: {
       type: Number,
       required: false,
     },

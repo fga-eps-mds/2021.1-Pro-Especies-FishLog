@@ -180,17 +180,17 @@ export default class FishController {
         const fishLogArray = fishLogIds.map(async (el: string) => {
           const fishLog = await FishLog.findById(el, {
             largeGroup: 1,
-            specie: 1,
+            species: 1,
             coordenates: 1,
-            lenght: 1,
+            length: 1,
             weight: 1,
           });
           if (fishLog)
             return {
-              specie: fishLog.specie,
+              species: fishLog.species,
               largeGroup: fishLog.largeGroup,
               coordenates: fishLog.coordenates,
-              lenght: fishLog.lenght,
+              length: fishLog.length,
               weight: fishLog.weight,
             };
           throw new Error();
