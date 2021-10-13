@@ -2,11 +2,13 @@ import { Schema, model, Document } from 'mongoose';
 
 export interface IFishLog extends Document {
   userId: number;
+  name: string;
   largeGroup: string;
-  specie: string;
+  group: string;
+  species: string;
   coordenates: [number, number][];
   photo: string;
-  lenght: number;
+  length: number;
   weight: number;
   reviewed: boolean;
   reviewedBy: number;
@@ -23,12 +25,20 @@ const fishLogSchema = new Schema<IFishLog>(
       type: Schema.Types.ObjectId,
       required: true,
     },
-    largeGroup: {
+    name: {
       type: String,
-      enum: ['escama', 'couro', 'arraia', 'outros'],
       required: false,
     },
-    specie: {
+    largeGroup: {
+      type: String,
+      enum: ['escama', 'couro', 'cascudo,', 'arraia', 'outros'],
+      required: false,
+    },
+    group: {
+      type: String,
+      required: false,
+    },
+    species: {
       type: String,
       required: false,
     },
@@ -40,7 +50,7 @@ const fishLogSchema = new Schema<IFishLog>(
       type: String,
       required: false,
     },
-    lenght: {
+    length: {
       type: Number,
       required: false,
     },
