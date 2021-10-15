@@ -6,8 +6,11 @@ export interface IFishLog extends Document {
   largeGroup: string;
   group: string;
   species: string;
-  coordenates: [number, number][];
-  photo: string;
+  coordenates: {
+    latitude: number;
+    longitude: number;
+  };
+  photo: Buffer;
   length: number;
   weight: number;
   reviewed: boolean;
@@ -43,11 +46,17 @@ const fishLogSchema = new Schema<IFishLog>(
       required: false,
     },
     coordenates: {
-      type: [],
-      required: false,
+      latitude: {
+        type: Number,
+        required: false,
+      },
+      longitude: {
+        type: Number,
+        required: false,
+      },
     },
     photo: {
-      type: String,
+      type: Buffer,
       required: false,
     },
     length: {
