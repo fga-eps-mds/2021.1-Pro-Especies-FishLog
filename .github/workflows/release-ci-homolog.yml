@@ -1,4 +1,5 @@
 name: Generate Release
+
 on:
   push:
     branches:
