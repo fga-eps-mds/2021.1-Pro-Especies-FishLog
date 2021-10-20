@@ -34,7 +34,6 @@ const fishLogSchema = new Schema<IFishLog>(
     },
     largeGroup: {
       type: String,
-      enum: ['escama', 'couro', 'cascudo,', 'arraia', 'outros'],
       required: false,
     },
     group: {
