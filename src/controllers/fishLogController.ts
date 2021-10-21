@@ -107,6 +107,12 @@ export default class FishController {
         (!fishLog.reviewed && String(fishLog?.userId) === data.id)
       ) {
         try {
+          if (!(req.body.largeGroup || req.body.species || req.body.photo)) {
+            return res.status(400).json({
+              message:
+                'Registro não pode ser atualizado! É necessário o grande grupo, a espécie ou a foto para a atualização de um registro.',
+            });
+          }
           await fishLog.updateOne(newFishLog);
 
           await fishLog.updateOne({ $push: { updatedBy: data.id } });
