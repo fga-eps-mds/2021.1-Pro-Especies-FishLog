@@ -1,19 +1,22 @@
 import { Schema, model, Document } from 'mongoose';
 
-interface IFishLog extends Document {
+export interface IFishLog extends Document {
   userId: number;
-  fishType: string;
-  specie: string;
+  name: string;
+  largeGroup: string;
+  group: string;
+  species: string;
   coordenates: [number, number][];
   photo: string;
-  lenght: number;
+  length: number;
+  weight: number;
   reviewed: boolean;
   reviewedBy: number;
   createdAt: Date;
   updatedAt: Date;
-  deletedBy: number;
   updatedBy: number;
   deletedAt: Date;
+  deletedBy: number;
 }
 
 const fishLogSchema = new Schema<IFishLog>(
@@ -22,12 +25,20 @@ const fishLogSchema = new Schema<IFishLog>(
       type: Schema.Types.ObjectId,
       required: true,
     },
-    fishType: {
+    name: {
       type: String,
-      enum: ['escama', 'couro', 'arraia', 'outros'],
       required: false,
     },
-    specie: {
+    largeGroup: {
+      type: String,
+      enum: ['escama', 'couro', 'cascudo,', 'arraia', 'outros'],
+      required: false,
+    },
+    group: {
+      type: String,
+      required: false,
+    },
+    species: {
       type: String,
       required: false,
     },
@@ -39,7 +50,11 @@ const fishLogSchema = new Schema<IFishLog>(
       type: String,
       required: false,
     },
-    lenght: {
+    length: {
+      type: Number,
+      required: false,
+    },
+    weight: {
       type: Number,
       required: false,
     },
@@ -51,15 +66,15 @@ const fishLogSchema = new Schema<IFishLog>(
       type: Schema.Types.ObjectId,
       required: false,
     },
+    updatedBy: {
+      type: [Schema.Types.ObjectId],
+      required: false,
+    },
     deletedAt: {
       type: Date,
     },
     deletedBy: {
       type: Schema.Types.ObjectId,
-      required: false,
-    },
-    updatedBy: {
-      type: [Schema.Types.ObjectId],
       required: false,
     },
   },

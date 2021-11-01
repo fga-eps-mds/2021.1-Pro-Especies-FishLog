@@ -1,0 +1,27 @@
+name: Set Release
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get last prerelease
+        id: last_release
+        uses: InsonusK/get-latest-release@v1.0.1
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+          exclude_types: "draft|release"
+
+      - name: Update prerelease to release
+        run: |
+          curl \
+          -u user:${{ secrets.GIT_TOKEN }} \
+          -X PATCH \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/fga-eps-mds/${{github.event.repository.name}}/releases/${{ steps.last_release.outputs.id }} \
+          -d '{"prerelease": "false"}'

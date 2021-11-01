@@ -1,8 +1,9 @@
 name: Generate Release
+
 on:
   push:
     branches:
-      - main
+      - devel
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +28,7 @@ jobs:
             SONAR_URL: ${{ secrets.SONAR_URL }}
 
       - name: Pushes sonar file
-        uses: dmnemec/copy_file_to_another_repo_action@main
+        uses: dmnemec/copy_file_to_another_repo_action@v1.1.1
         env:
           API_TOKEN_GITHUB: ${{ secrets.GIT_TOKEN }}
         with:
@@ -45,4 +46,5 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
+          prerelease: true
           artifacts: ${{ steps.report.outputs.report_file_name }}.json
