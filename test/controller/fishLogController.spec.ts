@@ -23,7 +23,7 @@ describe('Test Create FishLog function', () => {
     const mockRequest = {} as Request;
     mockRequest.body = {
       userId: '1',
-      specie: 'aa',
+      species: 'aa',
     };
 
     const response = mockResponse();
