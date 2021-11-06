@@ -174,10 +174,13 @@ export default class FishController {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       const data = JSON.parse(await auth.decodeToken(token as string));
-      const { fishLogIds } = req.body;
+      const fishLogIds = req.params.id_array;
+
+      const fishIdArray = fishLogIds.split(",");
+      console.log(fishIdArray);
 
       if (data.admin) {
-        const fishLogArray = fishLogIds.map(async (el: string) => {
+        const fishLogArray = fishIdArray.map(async (el: string) => {
           const fishLog = await FishLog.findById(el, {
             largeGroup: 1,
             species: 1,
@@ -187,11 +190,11 @@ export default class FishController {
           });
           if (fishLog)
             return {
-              species: fishLog.species,
-              largeGroup: fishLog.largeGroup,
-              coordenates: fishLog.coordenates,
-              length: fishLog.length,
-              weight: fishLog.weight,
+              "Especie": fishLog.species,
+              "Grande Grupo": fishLog.largeGroup,
+              "Coordenadas": fishLog.coordenates,
+              "Tamanho (cm)": fishLog.length,
+              "Peso (kg)": fishLog.weight,
             };
           throw new Error();
         });
