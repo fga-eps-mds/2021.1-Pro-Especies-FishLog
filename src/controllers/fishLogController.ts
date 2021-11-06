@@ -190,9 +190,9 @@ export default class FishController {
           });
           if (fishLog)
             return {
-              Espécie: fishLog.species,
+              "Especie": fishLog.species,
               "Grande Grupo": fishLog.largeGroup,
-              Coordenadas: fishLog.coordenates,
+              "Coordenadas": fishLog.coordenates,
               "Tamanho (cm)": fishLog.length,
               "Peso (kg)": fishLog.weight,
             };
