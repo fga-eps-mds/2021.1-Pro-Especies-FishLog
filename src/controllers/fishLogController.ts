@@ -9,10 +9,10 @@ const auth = new AuthService();
 export default class FishController {
   createFishLog = async (req: Request, res: Response) => {
     try {
-      if (!(req.body.largeGroup || req.body.species || req.body.photo)) {
+      if (!(req.body.name || req.body.species || req.body.photo)) {
         return res.status(400).json({
           message:
-            'Registro não foi criado, é necessário o tipo, a espécie ou a foto para a criação de um registro.',
+            'Registro não foi criado, é necessário o nome, a espécie ou a foto para a criação de um registro.',
         });
       }
       const fish = await FishLog.create(req.body);
@@ -107,6 +107,12 @@ export default class FishController {
         (!fishLog.reviewed && String(fishLog?.userId) === data.id)
       ) {
         try {
+          if (!(req.body.name || req.body.species || req.body.photo)) {
+            return res.status(400).json({
+              message:
+                'É necessário ao menos informar foto, espécie ou nome do peixe',
+            });
+          }
           await fishLog.updateOne(newFishLog);
 
           await fishLog.updateOne({ $push: { updatedBy: data.id } });
