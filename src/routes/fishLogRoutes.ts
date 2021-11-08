@@ -8,6 +8,10 @@ const fishLogRoutes = Router();
 
 const fishLogController = new FishController();
 
+fishLogRoutes.get('/export/:id_array', auth.authorize, (req: Request, res: Response) => {
+  fishLogController.generateCSV(req, res);
+});
+
 fishLogRoutes.post('/', auth.authorize, (req: Request, res: Response) => {
   fishLogController.createFishLog(req, res);
 });

@@ -14,6 +14,7 @@ const mockResponse = () => {
   response.status = jest.fn().mockReturnValue(response);
   response.sendStatus = jest.fn().mockReturnValue(response);
   response.json = jest.fn().mockReturnValue(response);
+  response.attachment = jest.fn().mockReturnValue(response);
   return response;
 };
 
@@ -22,7 +23,7 @@ describe('Test Create FishLog function', () => {
     const mockRequest = {} as Request;
     mockRequest.body = {
       userId: '1',
-      specie: 'aa',
+      species: 'aa',
     };
 
     const response = mockResponse();
@@ -62,8 +63,9 @@ describe('Test Create FishLog function', () => {
 });
 
 describe('Test Get All FishLogs function', () => {
-  it('should get a statusCode 200 with admin request', async () => {
+  it('should get a statusCode 200 with admin request and get all fishlogs', async () => {
     const mockRequest = {} as Request;
+    mockRequest.query = {};
     mockRequest.headers = {
       authorization:
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYmJhZGM0ZDAxMDAyMjU3ODJmMCIsImVtYWlsIjoibmF0YW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWDZtZ0cwZ0JhQzAwMHhHV1pIbVJrdTdVZkpZbHNxMS9La1hRMDBtdVdtLzdhdlhoanZ4UjIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMwNjk4Mjg0LCJleHAiOjE2MzA3ODQ2ODR9.uDsTpUWS-R47UquW044GjSdDXR1bgSw5GU7WGM6IIuI',
@@ -74,8 +76,69 @@ describe('Test Get All FishLogs function', () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it('should get a statusCode 200 with user request', async () => {
+  it('should get a statusCode 200 with admin request and get reviewed fishlogs', async () => {
     const mockRequest = {} as Request;
+    mockRequest.query = {
+      status: 'reviewed',
+    };
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYmJhZGM0ZDAxMDAyMjU3ODJmMCIsImVtYWlsIjoibmF0YW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWDZtZ0cwZ0JhQzAwMHhHV1pIbVJrdTdVZkpZbHNxMS9La1hRMDBtdVdtLzdhdlhoanZ4UjIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMwNjk4Mjg0LCJleHAiOjE2MzA3ODQ2ODR9.uDsTpUWS-R47UquW044GjSdDXR1bgSw5GU7WGM6IIuI',
+    };
+    const response = mockResponse();
+    FishLog.find = jest.fn().mockResolvedValueOnce([fishMock]);
+    const res = await fishLogController.getAllFishLogs(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 200 with admin request and get to be reviewed fishlogs', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.query = {
+      status: 'toBeReviewed',
+    };
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYmJhZGM0ZDAxMDAyMjU3ODJmMCIsImVtYWlsIjoibmF0YW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWDZtZ0cwZ0JhQzAwMHhHV1pIbVJrdTdVZkpZbHNxMS9La1hRMDBtdVdtLzdhdlhoanZ4UjIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMwNjk4Mjg0LCJleHAiOjE2MzA3ODQ2ODR9.uDsTpUWS-R47UquW044GjSdDXR1bgSw5GU7WGM6IIuI',
+    };
+    const response = mockResponse();
+    FishLog.find = jest.fn().mockResolvedValueOnce([fishMock]);
+    const res = await fishLogController.getAllFishLogs(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 200 with user request and get all fishlogs', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.query = {};
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYzM3ZGM0ZDAxMDAyMjU3ODJmOCIsImVtYWlsIjoibmF0YW5lZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRpQldyTk1yd3RKZEliOG5ibGZJZkVlY0cucjY0dFR3SkltRFhkQW9HYkc3b3M2UzUvUzNNNiIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjMwNjk4MTAzLCJleHAiOjE2MzA3ODQ1MDN9.B4nEuDFmC4TRMY57nIWyg46loniEAzjn7PJAapwAuXc',
+    };
+    const response = mockResponse();
+    FishLog.find = jest.fn().mockResolvedValueOnce([fishMock]);
+    const res = await fishLogController.getAllFishLogs(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 200 with user request and get reviewed fishlogs', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.query = {
+      status: 'reviewed',
+    };
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYzM3ZGM0ZDAxMDAyMjU3ODJmOCIsImVtYWlsIjoibmF0YW5lZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRpQldyTk1yd3RKZEliOG5ibGZJZkVlY0cucjY0dFR3SkltRFhkQW9HYkc3b3M2UzUvUzNNNiIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjMwNjk4MTAzLCJleHAiOjE2MzA3ODQ1MDN9.B4nEuDFmC4TRMY57nIWyg46loniEAzjn7PJAapwAuXc',
+    };
+    const response = mockResponse();
+    FishLog.find = jest.fn().mockResolvedValueOnce([fishMock]);
+    const res = await fishLogController.getAllFishLogs(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 200 with user request and get to be reviewed fishlogs', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.query = {
+      status: 'toBeReviewed',
+    };
     mockRequest.headers = {
       authorization:
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYzM3ZGM0ZDAxMDAyMjU3ODJmOCIsImVtYWlsIjoibmF0YW5lZUBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYSQxMCRpQldyTk1yd3RKZEliOG5ibGZJZkVlY0cucjY0dFR3SkltRFhkQW9HYkc3b3M2UzUvUzNNNiIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjMwNjk4MTAzLCJleHAiOjE2MzA3ODQ1MDN9.B4nEuDFmC4TRMY57nIWyg46loniEAzjn7PJAapwAuXc',
@@ -277,5 +340,37 @@ describe('Test delete FishLog function', () => {
     FishLog.findByIdAndDelete = jest.fn().mockResolvedValueOnce({});
     const res = await fishLogController.deleteFishLog(mockRequest, response);
     expect(res.status).toHaveBeenCalledWith(500);
+  });
+});
+
+describe('Test generate fishlog csv function', () => {
+  it('should get a statusCode 200 with admin request', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYmJhZGM0ZDAxMDAyMjU3ODJmMCIsImVtYWlsIjoibmF0YW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWDZtZ0cwZ0JhQzAwMHhHV1pIbVJrdTdVZkpZbHNxMS9La1hRMDBtdVdtLzdhdlhoanZ4UjIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMwNjk4Mjg0LCJleHAiOjE2MzA3ODQ2ODR9.uDsTpUWS-R47UquW044GjSdDXR1bgSw5GU7WGM6IIuI',
+    };
+    mockRequest.params = {
+      id_array: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    const res = await fishLogController.generateCSV(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('should get a statusCode 401 with user request', async () => {
+    const mockRequest = {} as Request;
+    mockRequest.headers = {
+      authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzI2NGJmMzZmMzAzMDAyMjVlYWE5YiIsImVtYWlsIjoibmF0YW5lZWRkQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGlaT0gwUnhaSUxHN0RlbnFXRktCRGVra0szUHBaTnU0ZXNwajl4UjFHMU1FaWh4T0h5b3l1IiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE2MzA2OTgxOTgsImV4cCI6MTYzMDc4NDU5OH0._lbiE0RZJn1N3mgQuiVjsGza8FC1grjRrVDjaxCCz6w',
+    };
+    mockRequest.params = {
+      id_array: '3472417428',
+    };
+    const response = mockResponse();
+    FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
+    const res = await fishLogController.generateCSV(mockRequest, response);
+    expect(res.status).toHaveBeenCalledWith(401);
   });
 });

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const databaseConnect = async () => {
   try {
     await mongoose.connect(
-      'mongodb://db/fish',
+      process.env.MONGODB_URI || 'mongodb://db/fish',
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
