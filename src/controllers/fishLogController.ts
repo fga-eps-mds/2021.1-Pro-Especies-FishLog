@@ -29,32 +29,20 @@ export default class FishController {
     try {
       const token = req.headers.authorization?.split(' ')[1];
       const data = JSON.parse(await auth.decodeToken(token as string));
-      const { status } = req.query;
 
-      interface IParams {
-        reviewed?: Boolean;
-        userId?: Number;
+      const entries = Object.entries(req.query);
+      const nonEmptyOrNull = entries.filter(
+        ([, val]) => val !== '' && val !== null
+      );
+      if (!data.admin) {
+        nonEmptyOrNull.push(['userId', data.id]);
       }
+      console.log(nonEmptyOrNull);
 
-      let params = {} as IParams;
+      const query = Object.fromEntries(nonEmptyOrNull);
+      const allFishLogs = await FishLog.find(query);
 
-      if (status === 'reviewed') {
-        params = {
-          reviewed: true,
-        };
-      } else if (status === 'toBeReviewed') {
-        params = {
-          reviewed: false,
-        };
-      }
-
-      if (data.admin) {
-        const responseAdmin = await FishLog.find(params);
-        return res.status(200).json(responseAdmin);
-      }
-      params.userId = data.id;
-      const responseUser = await FishLog.find(params);
-      return res.status(200).json(responseUser);
+      return res.status(200).json(allFishLogs);
     } catch (error) {
       return res.status(500).json({
         message: 'Falha ao processar requisição',
