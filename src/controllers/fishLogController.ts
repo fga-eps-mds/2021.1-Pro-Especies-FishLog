@@ -25,43 +25,6 @@ export default class FishController {
     }
   };
 
-  // getAllFishLogs = async (req: Request, res: Response) => {
-  //   try {
-  //     const token = req.headers.authorization?.split(' ')[1];
-  //     const data = JSON.parse(await auth.decodeToken(token as string));
-  //     const { status } = req.query;
-
-  //     interface IParams {
-  //       reviewed?: Boolean;
-  //       userId?: Number;
-  //     }
-
-  //     let params = {} as IParams;
-
-  //     if (status === 'reviewed') {
-  //       params = {
-  //         reviewed: true,
-  //       };
-  //     } else if (status === 'toBeReviewed') {
-  //       params = {
-  //         reviewed: false,
-  //       };
-  //     }
-
-  //     if (data.admin) {
-  //       const responseAdmin = await FishLog.find(params);
-  //       return res.status(200).json(responseAdmin);
-  //     }
-  //     params.userId = data.id;
-  //     const responseUser = await FishLog.find(params);
-  //     return res.status(200).json(responseUser);
-  //   } catch (error) {
-  //     return res.status(500).json({
-  //       message: 'Falha ao processar requisição',
-  //     });
-  //   }
-  // };
-
   getAllFishLogs = async (req: Request, res: Response) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
