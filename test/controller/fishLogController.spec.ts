@@ -350,8 +350,8 @@ describe('Test generate fishlog csv function', () => {
       authorization:
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzIzYmJhZGM0ZDAxMDAyMjU3ODJmMCIsImVtYWlsIjoibmF0YW5AZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkWDZtZ0cwZ0JhQzAwMHhHV1pIbVJrdTdVZkpZbHNxMS9La1hRMDBtdVdtLzdhdlhoanZ4UjIiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjMwNjk4Mjg0LCJleHAiOjE2MzA3ODQ2ODR9.uDsTpUWS-R47UquW044GjSdDXR1bgSw5GU7WGM6IIuI',
     };
-    mockRequest.body = {
-      fishLogIds: ['3472417428'],
+    mockRequest.params = {
+      id_array: '3472417428',
     };
     const response = mockResponse();
     FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
@@ -365,8 +365,8 @@ describe('Test generate fishlog csv function', () => {
       authorization:
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxMzI2NGJmMzZmMzAzMDAyMjVlYWE5YiIsImVtYWlsIjoibmF0YW5lZWRkQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGlaT0gwUnhaSUxHN0RlbnFXRktCRGVra0szUHBaTnU0ZXNwajl4UjFHMU1FaWh4T0h5b3l1IiwiYWRtaW4iOmZhbHNlLCJpYXQiOjE2MzA2OTgxOTgsImV4cCI6MTYzMDc4NDU5OH0._lbiE0RZJn1N3mgQuiVjsGza8FC1grjRrVDjaxCCz6w',
     };
-    mockRequest.body = {
-      fishLogIds: ['3472417428'],
+    mockRequest.params = {
+      id_array: '3472417428',
     };
     const response = mockResponse();
     FishLog.findById = jest.fn().mockResolvedValueOnce(fishMock);
